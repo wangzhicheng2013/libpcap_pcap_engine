@@ -120,11 +120,7 @@ private:
             }
         }
         pcap_freecode(&filter);
-        if (pcap_setnonblock(handler, 1, err_buf) < 0) {
-            std::cerr << "pcap setfilter failed error:" << pcap_geterr(handler) << std::endl;
-            pcap_close(handler);
-            return nullptr;
-        }
+        // pcap_setnonblock is related with pcap_dispatch here do not use pcap_setnonblock
         return handler;
     }
     void close_pcap_handlers() {
@@ -149,6 +145,7 @@ private:
         uint64_t last_total_packets_size = 0;
         while (true) {
             if (time(nullptr) - cur_time_stamp < stat_interval_) {
+                sleep(1);       // should sleep otherwise cpu will be very high
                 continue;
             }
             uint64_t val = total_packets_size.load();
