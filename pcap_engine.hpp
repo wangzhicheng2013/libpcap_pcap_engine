@@ -7,6 +7,7 @@
 #include <thread>
 #include <functional>
 #include <atomic>
+#include <chrono>
 #include "net_utility.hpp"
 std::atomic<uint64_t>total_packets_size;
 class pcap_engine {
@@ -145,7 +146,7 @@ private:
         uint64_t last_total_packets_size = 0;
         while (true) {
             if (time(nullptr) - cur_time_stamp < stat_interval_) {
-                sleep(1);       // should sleep otherwise cpu will be very high
+                std::this_thread::sleep_for(std::chrono::seconds(1));     // should sleep otherwise cpu will be very high
                 continue;
             }
             uint64_t val = total_packets_size.load();
