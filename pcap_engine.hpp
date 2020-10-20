@@ -177,8 +177,9 @@ private:
                 std::cerr << "pcap stat failed. card index:" << i << std::endl;
                 continue;
             }
-            all_netcards_drop_packet_num += pstat.ps_drop;
-            netcards_drop_packet_num[i] += pstat.ps_drop;
+            unsigned int num = pstat.ps_drop + pstat.ps_ifdrop;
+            all_netcards_drop_packet_num += num;
+            netcards_drop_packet_num[i] += num;
         }
     }
 private:
