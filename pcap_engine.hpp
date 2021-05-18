@@ -166,7 +166,8 @@ private:
         struct pcap_stat pstat = { 0 };
         int i = 0;
         int size = pcap_handlers_.size();
-        netcards_drop_packet_num.resize(size);
+        netcards_drop_packet_num.clear();
+        netcards_drop_packet_num.resize(size, 0);
         pcap_t *handler = nullptr;
         for (;i < size;i++) {
             handler = pcap_handlers_[i];
@@ -178,6 +179,10 @@ private:
                 continue;
             }
             unsigned int num = pstat.ps_drop + pstat.ps_ifdrop;
+            std::cout << "NIC " << i << " stat as following:" << std::endl;
+            std::cout << "number of packets receive = " << pstat.ps_recv << std::endl;
+            std::cout << "number of packets dropped because there was no room in the operating system's buffer when they arrived = " << pstat.ps_drop << std::endl;
+            std::cout << "number of packets dropped by the network interface or its driver = " << pstat.ps_ifdrop << std::endl;
             all_netcards_drop_packet_num += num;
             netcards_drop_packet_num[i] += num;
         }
